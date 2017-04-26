@@ -1,4 +1,3 @@
-<import src="post-item-like-template.wxml" />
 <template name="postItem">
   <view class="post-container">
     <view class="post-author-date">

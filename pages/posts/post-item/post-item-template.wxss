@@ -1,4 +1,4 @@
-@import "post-item-like-template.wxss";
+@import "post-item-like.wxss";
 .post-container{
     display: flex;
     flex-direction: column;
