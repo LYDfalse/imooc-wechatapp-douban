@@ -1,15 +1,28 @@
 {
-  "pages":[
-    "pages/welcome/welcome",
+  "pages": [
     "pages/posts/post",
-    "pages/posts/post-detail/post-detail"
+    "pages/posts/post-detail/post-detail",
+    "pages/mvoies/mvoies"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "小程序",
+    "navigationBarBackgroundColor": "#405f80",
+    "navigationBarTextStyle": "white",
     "backgroundColor": "#eeeeee",
     "backgroundTextStyle": "light",
     "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "selectedColor":"#405f80",
+    "list": [{
+      "pagePath": "pages/posts/post",
+      "text": "阅读",
+      "iconPath":"/images/tab/yuedu.png",
+      "selectedIconPath":"/images/tab/yuedu_hl.png"
+    }, {
+      "pagePath": "pages/mvoies/mvoies",
+      "text": "电影",
+      "iconPath":"/images/tab/dianying.png",
+      "selectedIconPath":"/images/tab/dianying_hl.png"
+    }]
   }
 }

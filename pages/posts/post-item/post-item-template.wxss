@@ -1,3 +1,4 @@
+@import "post-item-like-template.wxss";
 .post-container{
     display: flex;
     flex-direction: column;
@@ -43,20 +44,4 @@
     margin:0rpx 20rpx 20rpx 20rpx;
     letter-spacing: 2rpx;
     line-height: 15px;
-}
-.post-like{
-    font-size:13px;
-    flex-direction: row;
-    line-height: 16px;
-    margin-left: 10px;
-}
-.post-like-image{
-    height:16px;
-    width:16px;
-    margin-right: 8px;
-    vertical-align: middle;
-}
-.post-like-font{
-    vertical-align: middle;
-    margin-right: 20px;
 }
