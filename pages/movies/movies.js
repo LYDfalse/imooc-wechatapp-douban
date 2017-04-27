@@ -1,27 +1,26 @@
+var util = require("../../utils/util.js")
 var app = getApp();
 Page({
+    data:{
+        "inTheater":{},
+        "comingSoon":{},
+        "top250":{}
+    },
     onLoad: function (event) {
         var inTheatersUrl = app.globalData.doubanBase+"/v2/movie/in_theaters"+"?start=0&count=3";
         var comingSoonUrl = app.globalData.doubanBase+"/v2/movie/coming_soon"+"?start=0&count=3";
         var top250Url = app.globalData.doubanBase+"/v2/movie/top250"+"?start=0&count=3";
-        this.getMovieListData(inTheatersUrl);
-        // this.getMovieListData(comingSoonUrl);
-        // this.getMovieListData(top250Url);
+        this.getMovieListData(inTheatersUrl,"inTheater","正在热映");
+        this.getMovieListData(comingSoonUrl,"comingSoon","即将上映");
+        this.getMovieListData(top250Url,"top250","豆瓣Top250");
     },
-    getMovieListData:function(url){
+    getMovieListData:function(url,settedKey,categoryTtile){
         var that = this;
-        wx.request({
-            url: url,
-            method: 'GET',
-            header: {
-                'content-type': 'json'
-            },
-            success: function (res) {
-                that.processDoubanData(res.data)
-            }
-        })
+        util.http(url,function(data){
+            that.processDoubanData(data,settedKey,categoryTtile)
+        });
     },
-    processDoubanData:function(moviesDouban){
+    processDoubanData:function(moviesDouban,settedKey,categoryTtile){
         var movies = [];
         for(var idx in moviesDouban.subjects){
             var subject = moviesDouban.subjects[idx];
@@ -33,12 +32,22 @@ Page({
                 title:title,
                 average:subject.rating.average,
                 coverageUrl:subject.images.large,
-                movieId:subject.id
+                movieId:subject.id,
+                stars:util.convertToStarsArray(subject.rating.stars)
             }
             movies.push(temp);
         }
-        this.setData({
-            movies:movies
-        })
+        var readyData = {};
+        readyData[settedKey] = {
+            movies:movies,
+            categoryTtile:categoryTtile
+        };
+        this.setData(readyData);
+    },
+    onMoreTap:function(event){
+        var category = event.currentTarget.dataset.category;
+        wx.navigateTo({
+            url:"more-movie/more-movie?category=" + category
+        });
     }
 })
