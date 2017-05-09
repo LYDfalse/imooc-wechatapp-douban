@@ -1,80 +1,80 @@
 var util = require("../../utils/util.js")
 var app = getApp();
 Page({
-    data:{
-        "inTheater":{},
-        "comingSoon":{},
-        "top250":{},
-        "searchResult":{},
-        "containerShow":true,
-        "searchPanelShow":false
+    data: {
+        "inTheater": {},
+        "comingSoon": {},
+        "top250": {},
+        "searchResult": {},
+        "containerShow": true,
+        "searchPanelShow": false
     },
     onLoad: function (event) {
-        var inTheatersUrl = app.globalData.doubanBase+"/v2/movie/in_theaters"+"?start=0&count=3";
-        var comingSoonUrl = app.globalData.doubanBase+"/v2/movie/coming_soon"+"?start=0&count=3";
-        var top250Url = app.globalData.doubanBase+"/v2/movie/top250"+"?start=0&count=3";
-        this.getMovieListData(inTheatersUrl,"inTheater","正在热映");
-        this.getMovieListData(comingSoonUrl,"comingSoon","即将上映");
-        this.getMovieListData(top250Url,"top250","豆瓣Top250");
+        var inTheatersUrl = app.globalData.doubanBase + "/v2/movie/in_theaters" + "?start=0&count=3";
+        var comingSoonUrl = app.globalData.doubanBase + "/v2/movie/coming_soon" + "?start=0&count=3";
+        var top250Url = app.globalData.doubanBase + "/v2/movie/top250" + "?start=0&count=3";
+        this.getMovieListData(inTheatersUrl, "inTheater", "正在热映");
+        this.getMovieListData(comingSoonUrl, "comingSoon", "即将上映");
+        this.getMovieListData(top250Url, "top250", "豆瓣Top250");
     },
-    getMovieListData:function(url,settedKey,categoryTtile){
+    getMovieListData: function (url, settedKey, categoryTtile) {
         var that = this;
-        util.http(url,function(data){
-            that.processDoubanData(data,settedKey,categoryTtile)
+        util.http(url, function (data) {
+            that.processDoubanData(data, settedKey, categoryTtile)
         });
     },
-    processDoubanData:function(moviesDouban,settedKey,categoryTtile){
+    processDoubanData: function (moviesDouban, settedKey, categoryTtile) {
         var movies = [];
-        for(var idx in moviesDouban.subjects){
+        for (var idx in moviesDouban.subjects) {
             var subject = moviesDouban.subjects[idx];
             var title = subject.title;
-            if(title.length >= 6){
-                title = title.substring(0,6) + "...";
+            if (title.length >= 6) {
+                title = title.substring(0, 6) + "...";
             }
             var temp = {
-                title:title,
-                average:subject.rating.average,
-                coverageUrl:subject.images.large,
-                movieId:subject.id,
-                stars:util.convertToStarsArray(subject.rating.stars)
+                title: title,
+                average: subject.rating.average,
+                coverageUrl: subject.images.large,
+                movieId: subject.id,
+                stars: util.convertToStarsArray(subject.rating.stars)
             }
             movies.push(temp);
         }
         var readyData = {};
         readyData[settedKey] = {
-            movies:movies,
-            categoryTtile:categoryTtile
+            movies: movies,
+            categoryTtile: categoryTtile
         };
         this.setData(readyData);
     },
-    onMoreTap:function(event){
+    onMoreTap: function (event) {
         var category = event.currentTarget.dataset.category;
         wx.navigateTo({
-            url:"more-movie/more-movie?category=" + category
+            url: "more-movie/more-movie?category=" + category
         });
     },
-    onMovieTap:function(event){
+    onMovieTap: function (event) {
         var movieId = event.currentTarget.dataset.movieid;
         wx.navigateTo({
-          url: 'movie-detail/movie-detail?id=' + movieId
+            url: 'movie-detail/movie-detail?id=' + movieId
         })
     },
-    onBindFocus:function(event){
+    onBindFocus: function (event) {
         this.setData({
-            containerShow:false,
-            searchPanelShow:true
+            containerShow: false,
+            searchPanelShow: true
         })
     },
-    onCancelImgTap:function(event){
+    onCancelImgTap: function (event) {
         this.setData({
-            containerShow:true,
-            searchPanelShow:false,
-            searchResult:{}
+            containerShow: true,
+            searchPanelShow: false,
+            searchResult: {}
         })
     },
-    onBindBlur:function (event){
+    onBindBlur: function (event) {
         var text = event.detail.value;
         var searchUrl = app.globalData.doubanBase + "/v2/movie/search?q=" + text;
-        this.getMovieListData(searchUrl,"searchResult","");
+        this.getMovieListData(searchUrl, "searchResult", "");
     }
 })
